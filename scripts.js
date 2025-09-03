@@ -6,14 +6,15 @@ let canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 
-canvas.style.backgroundImage = 'url("most-common-types-grasses-zoysia-grass-0423-1e347b60421744439c37163f385b9802.jpg")';
+//canvas.style.backgroundImage = 'url("most-common-types-grasses-zoysia-grass-0423-1e347b60421744439c37163f385b9802.jpg")';
 canvas.style.height = "100vh"
 canvas.style.width = "100vw"
+canvas.style.backgroundColor = "rgba(81, 150, 87, 1)"
 
 document.height = "100vh"
 document.width = "100vw"
 
-context.drawImage(backgroundimg,0,0 ,canvas.height,canvas.width);
+
 //sprite
 const sprite = new Image()
 sprite.src = "Unarmed_Run_without_shadow.png";
@@ -28,49 +29,82 @@ let dh = canvas.height * .2;
 let dw = canvas.width * .2;
 let frameX = 0
 let frameY = 0 
+let x = 0;
+let y = 0;
 
 
+function framerate(){
 
+    if(gameLoop >= gameFrames){
+        if(frameX<7){
+            frameX++;
 
-const spriteanimation = () => {
-    context.clearRect(0,0,canvas.width,canvas.height);
-    document.addEventListener('keydown', function(event){
+        }
+        else{
+            frameX=0;
+        }
+        gameLoop = 0
         
-        let keydown = event.key;
-
-        switch(keydown) {
-            case 'w':
-                context.drawImage(sprite,sx*frameX,4* sy,sw,sh,0,0,dw,dh )
-                if(gameLoop % gameFrames == 0  ){
-                    if(frameX < 8) frameX++;
-                    else frameX = 0;
-                }
-
-
-
-            break    
-
-
-
-        } 
-
-        requestAnimationFrame(spriteanimation)
+    }
+    else {
+        gameLoop++
+    }
 
 
 
 
-
-
-
-    });
 }
 
+window.addEventListener('keydown',function(event){
+    if(event.key == 'w'){
+        frameY = 3;
+        framerate();
+        y = y - 1;
+    }
+    else if(event.key == 's'){
+        frameY = 0;
+        framerate();
+        y = y + 1;
+    }
+    else if(event.key == 'd'){
+        frameY = 2;
+        framerate();
+        x = x + 1;
+    }
+    else if(event.key == 'a'){
+        frameY = 1;
+        framerate();
+        x = x - 1;
+        
+    }
+    else{
+        frameY = 0;
+    }
+});
 
-spriteanimation();
 
 
 
 
+
+
+
+
+function animation(){
+
+    context.clearRect(0,0,canvas.width,canvas.height);
+    context.drawImage(sprite,frameX*64,frameY*64,sw,sh,x,y,sw,sh);
+
+    
+
+
+
+    requestAnimationFrame(animation);
+}
+
+sprite.onload =  function(){
+    animation();
+}
 
 
 
